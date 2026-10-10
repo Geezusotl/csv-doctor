@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "csv-doctor"
+version = "0.1.0"
+description = "Find problems in CSV files, explain every flag, and write a cleaned copy without touching the original."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["csv", "data-cleaning", "data-quality", "cli"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Topic :: Utilities",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]   # optional: the tests are plain unittest and also run under pytest
+
+[project.scripts]
+csv-doctor = "csv_doctor.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
