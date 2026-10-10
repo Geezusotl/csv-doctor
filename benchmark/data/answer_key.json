@@ -1,0 +1,658 @@
+[
+  {
+    "rule": "whitespace",
+    "row": 203,
+    "column": "department",
+    "original": "Operations",
+    "dirty": " Operations ",
+    "expected_fix": "Operations"
+  },
+  {
+    "rule": "whitespace",
+    "row": 95,
+    "column": "country",
+    "original": "United States",
+    "dirty": "United States  ",
+    "expected_fix": "United States"
+  },
+  {
+    "rule": "whitespace",
+    "row": 231,
+    "column": "department",
+    "original": "Operations",
+    "dirty": "Operations  ",
+    "expected_fix": "Operations"
+  },
+  {
+    "rule": "whitespace",
+    "row": 83,
+    "column": "department",
+    "original": "Finance",
+    "dirty": "Finance  ",
+    "expected_fix": "Finance"
+  },
+  {
+    "rule": "whitespace",
+    "row": 191,
+    "column": "name",
+    "original": "Alice Haddad",
+    "dirty": " Alice Haddad ",
+    "expected_fix": "Alice Haddad"
+  },
+  {
+    "rule": "whitespace",
+    "row": 122,
+    "column": "email",
+    "original": "imani.haddad.121@example.com",
+    "dirty": " imani.haddad.121@example.com ",
+    "expected_fix": "imani.haddad.121@example.com"
+  },
+  {
+    "rule": "whitespace",
+    "row": 115,
+    "column": "email",
+    "original": "dana.okafor.114@example.com",
+    "dirty": "dana.okafor.114@example.com  ",
+    "expected_fix": "dana.okafor.114@example.com"
+  },
+  {
+    "rule": "whitespace",
+    "row": 90,
+    "column": "name",
+    "original": "Priya Jensen",
+    "dirty": " Priya Jensen ",
+    "expected_fix": "Priya Jensen"
+  },
+  {
+    "rule": "whitespace",
+    "row": 21,
+    "column": "name",
+    "original": "Imani Jensen",
+    "dirty": "Imani Jensen  ",
+    "expected_fix": "Imani Jensen"
+  },
+  {
+    "rule": "whitespace",
+    "row": 296,
+    "column": "name",
+    "original": "Bruno Patel",
+    "dirty": " Bruno Patel ",
+    "expected_fix": "Bruno Patel"
+  },
+  {
+    "rule": "whitespace",
+    "row": 182,
+    "column": "country",
+    "original": "United States",
+    "dirty": "United States  ",
+    "expected_fix": "United States"
+  },
+  {
+    "rule": "whitespace",
+    "row": 32,
+    "column": "name",
+    "original": "Quinn Khan",
+    "dirty": "Quinn Khan  ",
+    "expected_fix": "Quinn Khan"
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 16,
+    "column": "email",
+    "original": "omar.lopez.15@example.com",
+    "dirty": "NA",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 26,
+    "column": "department",
+    "original": "Marketing",
+    "dirty": "unknown",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 134,
+    "column": "salary",
+    "original": "66800",
+    "dirty": "N/A",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 264,
+    "column": "country",
+    "original": "Canada",
+    "dirty": "N/A",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 249,
+    "column": "name",
+    "original": "Maya Baker",
+    "dirty": "?",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 30,
+    "column": "salary",
+    "original": "57400",
+    "dirty": "?",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 53,
+    "column": "salary",
+    "original": "69900",
+    "dirty": "N/A",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 76,
+    "column": "signup_date",
+    "original": "2023-09-05",
+    "dirty": "null",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 164,
+    "column": "age",
+    "original": "52",
+    "dirty": "null",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 4,
+    "column": "signup_date",
+    "original": "2023-03-04",
+    "dirty": "N/A",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 103,
+    "column": "department",
+    "original": "Marketing",
+    "dirty": "-",
+    "expected_fix": ""
+  },
+  {
+    "rule": "missing_placeholder",
+    "row": 154,
+    "column": "name",
+    "original": "Noor Lopez",
+    "dirty": "?",
+    "expected_fix": ""
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 227,
+    "column": "signup_date",
+    "original": "2021-02-04",
+    "dirty": "02/04/2021",
+    "expected_fix": "2021-02-04"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 55,
+    "column": "signup_date",
+    "original": "2021-03-25",
+    "dirty": "25.03.2021",
+    "expected_fix": "2021-03-25"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 243,
+    "column": "signup_date",
+    "original": "2020-05-21",
+    "dirty": "21 May 2020",
+    "expected_fix": "2020-05-21"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 167,
+    "column": "signup_date",
+    "original": "2022-01-05",
+    "dirty": "Jan 05, 2022",
+    "expected_fix": "2022-01-05"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 192,
+    "column": "signup_date",
+    "original": "2020-04-24",
+    "dirty": "04/24/2020",
+    "expected_fix": "2020-04-24"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 281,
+    "column": "signup_date",
+    "original": "2022-09-23",
+    "dirty": "23.09.2022",
+    "expected_fix": "2022-09-23"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 201,
+    "column": "signup_date",
+    "original": "2021-03-20",
+    "dirty": "20 Mar 2021",
+    "expected_fix": "2021-03-20"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 65,
+    "column": "signup_date",
+    "original": "2021-05-03",
+    "dirty": "May 03, 2021",
+    "expected_fix": "2021-05-03"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 193,
+    "column": "signup_date",
+    "original": "2022-11-26",
+    "dirty": "11/26/2022",
+    "expected_fix": "2022-11-26"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 248,
+    "column": "signup_date",
+    "original": "2022-01-12",
+    "dirty": "12.01.2022",
+    "expected_fix": "2022-01-12"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 99,
+    "column": "signup_date",
+    "original": "2021-07-17",
+    "dirty": "17 Jul 2021",
+    "expected_fix": "2021-07-17"
+  },
+  {
+    "rule": "mixed_date_format",
+    "row": 45,
+    "column": "signup_date",
+    "original": "2020-09-24",
+    "dirty": "Sep 24, 2020",
+    "expected_fix": "2020-09-24"
+  },
+  {
+    "rule": "invalid_date",
+    "row": 114,
+    "column": "signup_date",
+    "original": "2020-11-12",
+    "dirty": "2021-02-30",
+    "expected_fix": null
+  },
+  {
+    "rule": "invalid_date",
+    "row": 298,
+    "column": "signup_date",
+    "original": "2023-03-04",
+    "dirty": "2021-04-31",
+    "expected_fix": null
+  },
+  {
+    "rule": "invalid_date",
+    "row": 208,
+    "column": "signup_date",
+    "original": "2022-01-14",
+    "dirty": "2021-04-31",
+    "expected_fix": null
+  },
+  {
+    "rule": "invalid_date",
+    "row": 38,
+    "column": "signup_date",
+    "original": "2022-03-21",
+    "dirty": "2022-13-05",
+    "expected_fix": null
+  },
+  {
+    "rule": "number_format",
+    "row": 236,
+    "column": "salary",
+    "original": "71700",
+    "dirty": "$71,700",
+    "expected_fix": "71700"
+  },
+  {
+    "rule": "number_format",
+    "row": 175,
+    "column": "salary",
+    "original": "45900",
+    "dirty": "$45,900",
+    "expected_fix": "45900"
+  },
+  {
+    "rule": "number_format",
+    "row": 230,
+    "column": "salary",
+    "original": "64100",
+    "dirty": "$64100",
+    "expected_fix": "64100"
+  },
+  {
+    "rule": "number_format",
+    "row": 5,
+    "column": "salary",
+    "original": "60800",
+    "dirty": "$60800",
+    "expected_fix": "60800"
+  },
+  {
+    "rule": "number_format",
+    "row": 293,
+    "column": "salary",
+    "original": "64100",
+    "dirty": "64,100",
+    "expected_fix": "64100"
+  },
+  {
+    "rule": "number_format",
+    "row": 185,
+    "column": "salary",
+    "original": "62200",
+    "dirty": "$62,200",
+    "expected_fix": "62200"
+  },
+  {
+    "rule": "mixed_type",
+    "row": 235,
+    "column": "age",
+    "original": "25",
+    "dirty": "???",
+    "expected_fix": null
+  },
+  {
+    "rule": "mixed_type",
+    "row": 51,
+    "column": "age",
+    "original": "27",
+    "dirty": "forty-two",
+    "expected_fix": null
+  },
+  {
+    "rule": "mixed_type",
+    "row": 206,
+    "column": "age",
+    "original": "45",
+    "dirty": "???",
+    "expected_fix": null
+  },
+  {
+    "rule": "mixed_type",
+    "row": 11,
+    "column": "age",
+    "original": "45",
+    "dirty": "twenty",
+    "expected_fix": null
+  },
+  {
+    "rule": "mixed_type",
+    "row": 42,
+    "column": "age",
+    "original": "47",
+    "dirty": "forty-two",
+    "expected_fix": null
+  },
+  {
+    "rule": "mixed_type",
+    "row": 239,
+    "column": "age",
+    "original": "30",
+    "dirty": "abc",
+    "expected_fix": null
+  },
+  {
+    "rule": "outlier",
+    "row": 215,
+    "column": "age",
+    "original": "47",
+    "dirty": "250",
+    "expected_fix": null
+  },
+  {
+    "rule": "outlier",
+    "row": 58,
+    "column": "age",
+    "original": "28",
+    "dirty": "999",
+    "expected_fix": null
+  },
+  {
+    "rule": "outlier",
+    "row": 282,
+    "column": "age",
+    "original": "56",
+    "dirty": "180",
+    "expected_fix": null
+  },
+  {
+    "rule": "outlier",
+    "row": 160,
+    "column": "salary",
+    "original": "61000",
+    "dirty": "9500000",
+    "expected_fix": null
+  },
+  {
+    "rule": "outlier",
+    "row": 223,
+    "column": "salary",
+    "original": "59500",
+    "dirty": "4000000",
+    "expected_fix": null
+  },
+  {
+    "rule": "inconsistent_case",
+    "row": 97,
+    "column": "department",
+    "original": "Support",
+    "dirty": "SUPPORT",
+    "expected_fix": "Support"
+  },
+  {
+    "rule": "inconsistent_case",
+    "row": 229,
+    "column": "country",
+    "original": "Brazil",
+    "dirty": "brazil",
+    "expected_fix": "Brazil"
+  },
+  {
+    "rule": "inconsistent_case",
+    "row": 258,
+    "column": "department",
+    "original": "Support",
+    "dirty": "support",
+    "expected_fix": "Support"
+  },
+  {
+    "rule": "inconsistent_case",
+    "row": 37,
+    "column": "country",
+    "original": "Canada",
+    "dirty": "CANADA",
+    "expected_fix": "Canada"
+  },
+  {
+    "rule": "inconsistent_case",
+    "row": 260,
+    "column": "department",
+    "original": "Support",
+    "dirty": "support",
+    "expected_fix": "Support"
+  },
+  {
+    "rule": "inconsistent_case",
+    "row": 116,
+    "column": "country",
+    "original": "Germany",
+    "dirty": "germany",
+    "expected_fix": "Germany"
+  },
+  {
+    "rule": "category_typo",
+    "row": 277,
+    "column": "country",
+    "original": "Brazil",
+    "dirty": "Braizl",
+    "expected_fix": "Brazil"
+  },
+  {
+    "rule": "category_typo",
+    "row": 100,
+    "column": "department",
+    "original": "Marketing",
+    "dirty": "Marketng",
+    "expected_fix": "Marketing"
+  },
+  {
+    "rule": "category_typo",
+    "row": 217,
+    "column": "country",
+    "original": "Canada",
+    "dirty": "Canadda",
+    "expected_fix": "Canada"
+  },
+  {
+    "rule": "category_typo",
+    "row": 7,
+    "column": "department",
+    "original": "Engineering",
+    "dirty": "Engienering",
+    "expected_fix": "Engineering"
+  },
+  {
+    "rule": "category_typo",
+    "row": 162,
+    "column": "country",
+    "original": "Canada",
+    "dirty": "Canxda",
+    "expected_fix": "Canada"
+  },
+  {
+    "rule": "category_typo",
+    "row": 250,
+    "column": "country",
+    "original": "Germany",
+    "dirty": "Gerany",
+    "expected_fix": "Germany"
+  },
+  {
+    "rule": "category_typo",
+    "row": 88,
+    "column": "department",
+    "original": "Finance",
+    "dirty": "Finaance",
+    "expected_fix": "Finance"
+  },
+  {
+    "rule": "category_typo",
+    "row": 84,
+    "column": "department",
+    "original": "Finance",
+    "dirty": "Finanxe",
+    "expected_fix": "Finance"
+  },
+  {
+    "rule": "ragged_row",
+    "row": 121,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": null
+  },
+  {
+    "rule": "ragged_row",
+    "row": 47,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": null
+  },
+  {
+    "rule": "ragged_row",
+    "row": 261,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": null
+  },
+  {
+    "rule": "duplicate_row",
+    "row": 302,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": "<delete-row>"
+  },
+  {
+    "rule": "duplicate_row",
+    "row": 303,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": "<delete-row>"
+  },
+  {
+    "rule": "duplicate_row",
+    "row": 304,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": "<delete-row>"
+  },
+  {
+    "rule": "duplicate_row",
+    "row": 305,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": "<delete-row>"
+  },
+  {
+    "rule": "duplicate_row",
+    "row": 306,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": "<delete-row>"
+  },
+  {
+    "rule": "duplicate_row",
+    "row": 307,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": "<delete-row>"
+  },
+  {
+    "rule": "duplicate_row",
+    "row": 308,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": "<delete-row>"
+  },
+  {
+    "rule": "duplicate_row",
+    "row": 309,
+    "column": null,
+    "original": null,
+    "dirty": null,
+    "expected_fix": "<delete-row>"
+  }
+]
