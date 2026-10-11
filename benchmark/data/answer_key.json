@@ -4,12 +4,44 @@
     "row": 203,
     "column": "department",
     "original": "Operations",
-    "dirty": " Operations ",
+    "dirty": "  Operations",
     "expected_fix": "Operations"
   },
   {
     "rule": "whitespace",
     "row": 95,
+    "column": "department",
+    "original": "Marketing",
+    "dirty": "Marketing  ",
+    "expected_fix": "Marketing"
+  },
+  {
+    "rule": "whitespace",
+    "row": 231,
+    "column": "country",
+    "original": "India",
+    "dirty": " India ",
+    "expected_fix": "India"
+  },
+  {
+    "rule": "whitespace",
+    "row": 83,
+    "column": "email",
+    "original": "maya.okafor.82@example.com",
+    "dirty": "maya.okafor.82@example.com  ",
+    "expected_fix": "maya.okafor.82@example.com"
+  },
+  {
+    "rule": "whitespace",
+    "row": 191,
+    "column": "department",
+    "original": "Operations",
+    "dirty": "  Operations",
+    "expected_fix": "Operations"
+  },
+  {
+    "rule": "whitespace",
+    "row": 122,
     "column": "country",
     "original": "United States",
     "dirty": "United States  ",
@@ -17,83 +49,51 @@
   },
   {
     "rule": "whitespace",
-    "row": 231,
-    "column": "department",
-    "original": "Operations",
-    "dirty": "Operations  ",
-    "expected_fix": "Operations"
-  },
-  {
-    "rule": "whitespace",
-    "row": 83,
-    "column": "department",
-    "original": "Finance",
-    "dirty": "Finance  ",
-    "expected_fix": "Finance"
-  },
-  {
-    "rule": "whitespace",
-    "row": 191,
-    "column": "name",
-    "original": "Alice Haddad",
-    "dirty": " Alice Haddad ",
-    "expected_fix": "Alice Haddad"
-  },
-  {
-    "rule": "whitespace",
-    "row": 122,
-    "column": "email",
-    "original": "imani.haddad.121@example.com",
-    "dirty": " imani.haddad.121@example.com ",
-    "expected_fix": "imani.haddad.121@example.com"
-  },
-  {
-    "rule": "whitespace",
     "row": 115,
-    "column": "email",
-    "original": "dana.okafor.114@example.com",
-    "dirty": "dana.okafor.114@example.com  ",
-    "expected_fix": "dana.okafor.114@example.com"
+    "column": "department",
+    "original": "Marketing",
+    "dirty": " Marketing ",
+    "expected_fix": "Marketing"
   },
   {
-    "rule": "whitespace",
+    "rule": "repeated_spaces",
     "row": 90,
-    "column": "name",
-    "original": "Priya Jensen",
-    "dirty": " Priya Jensen ",
-    "expected_fix": "Priya Jensen"
+    "column": "country",
+    "original": "United States",
+    "dirty": "United   States",
+    "expected_fix": "United States"
   },
   {
     "rule": "whitespace",
     "row": 21,
     "column": "name",
     "original": "Imani Jensen",
-    "dirty": "Imani Jensen  ",
+    "dirty": "  Imani Jensen",
     "expected_fix": "Imani Jensen"
   },
   {
     "rule": "whitespace",
     "row": 296,
-    "column": "name",
-    "original": "Bruno Patel",
-    "dirty": " Bruno Patel ",
-    "expected_fix": "Bruno Patel"
+    "column": "department",
+    "original": "Support",
+    "dirty": "Support  ",
+    "expected_fix": "Support"
   },
   {
     "rule": "whitespace",
     "row": 182,
-    "column": "country",
-    "original": "United States",
-    "dirty": "United States  ",
-    "expected_fix": "United States"
+    "column": "email",
+    "original": "bruno.lopez.181@example.com",
+    "dirty": " bruno.lopez.181@example.com ",
+    "expected_fix": "bruno.lopez.181@example.com"
   },
   {
     "rule": "whitespace",
     "row": 32,
-    "column": "name",
-    "original": "Quinn Khan",
-    "dirty": "Quinn Khan  ",
-    "expected_fix": "Quinn Khan"
+    "column": "department",
+    "original": "Marketing",
+    "dirty": "Marketing  ",
+    "expected_fix": "Marketing"
   },
   {
     "rule": "missing_placeholder",
@@ -106,25 +106,25 @@
   {
     "rule": "missing_placeholder",
     "row": 26,
-    "column": "department",
-    "original": "Marketing",
-    "dirty": "unknown",
+    "column": "salary",
+    "original": "67600",
+    "dirty": "N/A",
     "expected_fix": ""
   },
   {
     "rule": "missing_placeholder",
     "row": 134,
-    "column": "salary",
-    "original": "66800",
-    "dirty": "N/A",
+    "column": "age",
+    "original": "51",
+    "dirty": "null",
     "expected_fix": ""
   },
   {
     "rule": "missing_placeholder",
     "row": 264,
-    "column": "country",
-    "original": "Canada",
-    "dirty": "N/A",
+    "column": "signup_date",
+    "original": "2022-11-03",
+    "dirty": "none",
     "expected_fix": ""
   },
   {
@@ -132,63 +132,63 @@
     "row": 249,
     "column": "name",
     "original": "Maya Baker",
-    "dirty": "?",
+    "dirty": "missing",
     "expected_fix": ""
   },
   {
     "rule": "missing_placeholder",
     "row": 30,
-    "column": "salary",
-    "original": "57400",
-    "dirty": "?",
+    "column": "department",
+    "original": "Engineering",
+    "dirty": "-",
     "expected_fix": ""
   },
   {
     "rule": "missing_placeholder",
     "row": 53,
-    "column": "salary",
-    "original": "69900",
+    "column": "signup_date",
+    "original": "2023-10-06",
     "dirty": "N/A",
     "expected_fix": ""
   },
   {
     "rule": "missing_placeholder",
     "row": 76,
-    "column": "signup_date",
-    "original": "2023-09-05",
-    "dirty": "null",
+    "column": "email",
+    "original": "keiko.meyer.75@example.com",
+    "dirty": "none",
     "expected_fix": ""
   },
   {
     "rule": "missing_placeholder",
     "row": 164,
-    "column": "age",
-    "original": "52",
-    "dirty": "null",
+    "column": "department",
+    "original": "Finance",
+    "dirty": "NA",
     "expected_fix": ""
   },
   {
     "rule": "missing_placeholder",
     "row": 4,
-    "column": "signup_date",
-    "original": "2023-03-04",
-    "dirty": "N/A",
+    "column": "country",
+    "original": "Canada",
+    "dirty": "unknown",
     "expected_fix": ""
   },
   {
     "rule": "missing_placeholder",
     "row": 103,
-    "column": "department",
-    "original": "Marketing",
-    "dirty": "-",
+    "column": "salary",
+    "original": "66800",
+    "dirty": "N/A",
     "expected_fix": ""
   },
   {
     "rule": "missing_placeholder",
     "row": 154,
-    "column": "name",
-    "original": "Noor Lopez",
-    "dirty": "?",
+    "column": "country",
+    "original": "Brazil",
+    "dirty": "N/A",
     "expected_fix": ""
   },
   {
@@ -300,7 +300,7 @@
     "row": 298,
     "column": "signup_date",
     "original": "2023-03-04",
-    "dirty": "2021-04-31",
+    "dirty": "next week",
     "expected_fix": null
   },
   {
@@ -316,7 +316,7 @@
     "row": 38,
     "column": "signup_date",
     "original": "2022-03-21",
-    "dirty": "2022-13-05",
+    "dirty": "next week",
     "expected_fix": null
   },
   {
@@ -324,7 +324,7 @@
     "row": 236,
     "column": "salary",
     "original": "71700",
-    "dirty": "$71,700",
+    "dirty": "71,700",
     "expected_fix": "71700"
   },
   {
@@ -332,7 +332,7 @@
     "row": 175,
     "column": "salary",
     "original": "45900",
-    "dirty": "$45,900",
+    "dirty": "$45900",
     "expected_fix": "45900"
   },
   {
@@ -348,7 +348,7 @@
     "row": 5,
     "column": "salary",
     "original": "60800",
-    "dirty": "$60800",
+    "dirty": "$60,800",
     "expected_fix": "60800"
   },
   {
@@ -356,7 +356,7 @@
     "row": 293,
     "column": "salary",
     "original": "64100",
-    "dirty": "64,100",
+    "dirty": "$64100",
     "expected_fix": "64100"
   },
   {
@@ -372,7 +372,7 @@
     "row": 235,
     "column": "age",
     "original": "25",
-    "dirty": "???",
+    "dirty": "abc",
     "expected_fix": null
   },
   {
@@ -380,7 +380,7 @@
     "row": 51,
     "column": "age",
     "original": "27",
-    "dirty": "forty-two",
+    "dirty": "twenty",
     "expected_fix": null
   },
   {
@@ -388,7 +388,7 @@
     "row": 206,
     "column": "age",
     "original": "45",
-    "dirty": "???",
+    "dirty": "twenty",
     "expected_fix": null
   },
   {
@@ -396,7 +396,7 @@
     "row": 11,
     "column": "age",
     "original": "45",
-    "dirty": "twenty",
+    "dirty": "???",
     "expected_fix": null
   },
   {
@@ -412,7 +412,7 @@
     "row": 239,
     "column": "age",
     "original": "30",
-    "dirty": "abc",
+    "dirty": "twenty",
     "expected_fix": null
   },
   {
@@ -508,31 +508,31 @@
     "row": 277,
     "column": "country",
     "original": "Brazil",
-    "dirty": "Braizl",
+    "dirty": "Barzil",
     "expected_fix": "Brazil"
   },
   {
     "rule": "category_typo",
     "row": 100,
-    "column": "department",
-    "original": "Marketing",
-    "dirty": "Marketng",
-    "expected_fix": "Marketing"
+    "column": "country",
+    "original": "Germany",
+    "dirty": "Gemany",
+    "expected_fix": "Germany"
   },
   {
     "rule": "category_typo",
     "row": 217,
-    "column": "country",
-    "original": "Canada",
-    "dirty": "Canadda",
-    "expected_fix": "Canada"
+    "column": "department",
+    "original": "Marketing",
+    "dirty": "Markeitng",
+    "expected_fix": "Marketing"
   },
   {
     "rule": "category_typo",
     "row": 7,
     "column": "department",
     "original": "Engineering",
-    "dirty": "Engienering",
+    "dirty": "Engineeriing",
     "expected_fix": "Engineering"
   },
   {
@@ -540,7 +540,7 @@
     "row": 162,
     "column": "country",
     "original": "Canada",
-    "dirty": "Canxda",
+    "dirty": "Caanada",
     "expected_fix": "Canada"
   },
   {
@@ -548,7 +548,7 @@
     "row": 250,
     "column": "country",
     "original": "Germany",
-    "dirty": "Gerany",
+    "dirty": "Germnay",
     "expected_fix": "Germany"
   },
   {
@@ -556,16 +556,40 @@
     "row": 88,
     "column": "department",
     "original": "Finance",
-    "dirty": "Finaance",
+    "dirty": "Fiance",
     "expected_fix": "Finance"
   },
   {
     "rule": "category_typo",
     "row": 84,
-    "column": "department",
-    "original": "Finance",
-    "dirty": "Finanxe",
-    "expected_fix": "Finance"
+    "column": "country",
+    "original": "United States",
+    "dirty": "United Sttates",
+    "expected_fix": "United States"
+  },
+  {
+    "rule": "spreadsheet_formula",
+    "row": 212,
+    "column": "name",
+    "original": "Liam Khan",
+    "dirty": "=HYPERLINK(\"http://example.invalid\",\"click\")",
+    "expected_fix": null
+  },
+  {
+    "rule": "spreadsheet_formula",
+    "row": 61,
+    "column": "name",
+    "original": "Noor Ito",
+    "dirty": "@SUM(1,2)",
+    "expected_fix": null
+  },
+  {
+    "rule": "spreadsheet_formula",
+    "row": 124,
+    "column": "name",
+    "original": "Chen Garcia",
+    "dirty": "+cmd|' /c calc'!A0",
+    "expected_fix": null
   },
   {
     "rule": "ragged_row",

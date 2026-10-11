@@ -73,7 +73,7 @@ Use `--format json` on either command for machine-readable output (each issue ha
 | `csv-doctor fix FILE [-o OUT] [--force]` | Write a cleaned copy (default `FILE.fixed.csv`). | `0` on success, `2` on error |
 | `csv-doctor rules` | List every rule. | `0` |
 
-Useful flags: `--ignore RULE` (repeatable), `--delimiter ";"` or `tab` (default: detected), `--all` (list every finding instead of the first few per rule), `--format json`. Because `check` exits with `1` when it finds problems, it works as a CI gate for data files.
+Useful flags: `--ignore RULE` and `--only RULE` (both repeatable; for a trim-only clean use `--only whitespace`, to keep inner spacing use `--ignore repeated_spaces`), `--delimiter ";"` or `tab` (default: detected), `--all` (list every finding instead of the first few per rule), `--format json`. Because `check` exits with `1` when it finds problems, it works as a CI gate for data files.
 
 Rows are numbered like a spreadsheet: the header is row 1, the first data row is row 2.
 
@@ -81,7 +81,8 @@ Rows are numbered like a spreadsheet: the header is row 1, the first data row is
 
 | Rule | Flags | Offers a fix? |
 |---|---|---|
-| `whitespace` | Leading, trailing or repeated spaces | Yes, trims them |
+| `whitespace` | Leading or trailing spaces or tabs | Yes, trims them |
+| `repeated_spaces` | Two or more spaces in a row inside a cell | Yes, collapses them to one |
 | `missing_placeholder` | `N/A`, `null`, `none`, `-`, `?`, ... standing in for a blank | Yes, blanks the cell |
 | `duplicate_row` | A row exactly identical to an earlier one (spacing and capitalisation count; rows that differ only by spaces become duplicates after `fix` trims them) | Yes, deletes the later copy |
 | `duplicate_header` | A blank or repeated column name | No |
@@ -93,6 +94,7 @@ Rows are numbered like a spreadsheet: the header is row 1, the first data row is
 | `outlier` | A number far from the column median | No, never |
 | `inconsistent_case` | `sales` among `Sales` | Yes |
 | `category_typo` | A rare value one or two edits from a common one | Yes |
+| `spreadsheet_formula` | Text such as `=1+1`, `@SUM(1,2)` or `+cmd\|...` that Excel, Sheets or LibreOffice may run as a formula when the file is opened. A plain `-123` or `+44 20 ...` is not flagged | No, never: a prefix would change your data |
 
 ## How it decides
 
@@ -145,10 +147,10 @@ The same benchmark also runs *valid* data that looks suspicious. Full table in [
 ## Tests
 
 ```bash
-python -m unittest discover -s tests -t .     # 104 tests, about 8 seconds, no installs needed
+python -m unittest discover -s tests -t .     # 128 tests, about 8 seconds, no installs needed
 ```
 
-The suite covers each rule, the quality of every explanation (each must name its value and column, and unfixable ones must say why), the safety guarantees above, empty and malformed files, encodings and delimiters, a 40,000-row file, 900 seeded random tables checking that nothing crashes and `fix` is idempotent, and the benchmark floors. To check the tests themselves, deliberate bugs were planted in the code (overwriting the input, flipping day/month, breaking a rule, and so on) and all 13 were caught. pytest can also run the suite if you prefer it.
+The suite covers each rule, the quality of every explanation (each must name its value and column, and unfixable ones must say why), the safety guarantees above, empty and malformed files, encodings and delimiters, a 40,000-row file, 900 seeded random tables checking that nothing crashes and `fix` is idempotent, and the benchmark floors. To check the tests themselves, deliberate bugs were planted in the code (overwriting the input, flipping day/month, breaking a rule, and so on) and all 13 were caught (done on the first version; later additions are covered by their own tests). pytest can also run the suite if you prefer it.
 
 CI (GitHub Actions) runs the suite on Python 3.10 to 3.13 and fails if `benchmark/RESULTS.md` is out of date.
 

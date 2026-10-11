@@ -29,7 +29,8 @@ MIN_OUTLIER_VALUES = 8
 MAX_CATEGORIES = 30
 
 RULES = {
-    "whitespace": "Leading, trailing or repeated spaces in a cell.",
+    "whitespace": "Leading or trailing spaces or tabs in a cell.",
+    "repeated_spaces": "Two or more spaces in a row inside a cell.",
     "missing_placeholder": "Text such as N/A, null or '-' standing in for a blank.",
     "duplicate_row": "A row identical to an earlier row.",
     "duplicate_header": "A blank or repeated column name.",
@@ -41,6 +42,7 @@ RULES = {
     "outlier": "A number far outside the typical range of its column.",
     "inconsistent_case": "A category spelled with different capitalisation from the rest.",
     "category_typo": "A rare category one or two edits away from a common one.",
+    "spreadsheet_formula": "Text a spreadsheet may run as a formula when the file is opened (starts with =, or looks like +SUM(...)).",
 }
 
 PLACEHOLDERS = frozenset(
@@ -94,6 +96,21 @@ _SPACES = re.compile(r"[ \t]{2,}")
 def normalize(value: str) -> str:
     """Strip the ends and collapse runs of spaces. Idempotent."""
     return _SPACES.sub(" ", value.strip())
+
+
+_FORMULA = re.compile(r"""
+    =.+                                  # = followed by anything
+  | [@+\-]\s*[A-Za-z_][A-Za-z0-9_.]*\(.*    # @SUM(  +SUM(  -cmd(
+  | [=@+\-].*\|.*!.*                    # DDE style:  +cmd|'/c calc'!A0
+""", re.VERBOSE | re.DOTALL)
+
+
+def looks_like_formula(value: str) -> bool:
+    """True for text that Excel, Sheets or LibreOffice may execute when a CSV is opened.
+
+    Plain signed numbers such as "-123" or "+1.5" are not formulas.
+    """
+    return bool(_FORMULA.fullmatch(value.lstrip(" ")))
 
 
 def is_placeholder(value: str) -> bool:
@@ -306,11 +323,26 @@ def _finding(rule: str, cell: Cell, col: Column, why: str, suggestion=None) -> F
 def check_cells(col: Column) -> Iterator[Finding]:
     """Rules that apply to any column: whitespace and missing-value placeholders."""
     for c in col.cells:
-        if c.raw != c.val:
+        if c.raw != c.raw.strip():
             yield _finding(
                 "whitespace", c, col,
-                f"{c.raw!r} in column {col.name!r} has leading, trailing or repeated spaces.",
-                c.val,
+                f"{c.raw!r} in column {col.name!r} has leading or trailing spaces.",
+                c.raw.strip(),
+            )
+        if c.raw.strip() and _SPACES.search(c.raw.strip()):
+            yield _finding(
+                "repeated_spaces", c, col,
+                f"{c.raw!r} in column {col.name!r} has two or more spaces in a row inside the text "
+                f"(use --ignore repeated_spaces if the spacing is meaningful here).",
+                # Only the inner runs are collapsed; any outer spaces belong to the whitespace rule.
+                _SPACES.sub(" ", c.raw),
+            )
+        if looks_like_formula(c.raw):
+            yield _finding(
+                "spreadsheet_formula", c, col,
+                f"{c.raw!r} in column {col.name!r} may be run as a formula when this file is opened in "
+                f"Excel, Google Sheets or LibreOffice (CSV injection)."
+                + _no_fix("adding a prefix would change the data, and it may be intentional"),
             )
         if c.val and is_placeholder(c.val):
             yield _finding(

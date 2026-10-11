@@ -13,8 +13,8 @@ from .hard_cases import run_cases
 HERE = Path(__file__).parent
 HEADLINE_SEED = 7
 SEEDS = range(1, 31)
-RULE_ORDER = ["whitespace", "missing_placeholder", "duplicate_row", "ragged_row", "mixed_date_format",
-              "invalid_date", "number_format", "mixed_type", "outlier", "inconsistent_case", "category_typo"]
+RULE_ORDER = ["whitespace", "repeated_spaces", "missing_placeholder", "duplicate_row", "ragged_row", "mixed_date_format",
+              "invalid_date", "number_format", "mixed_type", "outlier", "inconsistent_case", "category_typo", "spreadsheet_formula"]
 
 
 def _pct(x: float) -> str:

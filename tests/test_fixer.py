@@ -150,3 +150,26 @@ class OutputPathTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SpacingRuleSwitchTests(unittest.TestCase):
+    ROWS = [[" 001 ", " Maya ", "two  spaces"], ["002", "\tNoah\t", " keep internal  spaces "]]
+
+    def fixed(self, **kw):
+        return fix_table(Table(["id", "name", "note"], [list(r) for r in self.ROWS], ","), **kw).table.rows
+
+    def test_everything_by_default(self):
+        self.assertEqual(self.fixed(), [["001", "Maya", "two spaces"], ["002", "Noah", "keep internal spaces"]])
+
+    def test_trim_only_keeps_inner_spacing(self):
+        rows = self.fixed(ignore=["repeated_spaces"])
+        self.assertEqual(rows, [["001", "Maya", "two  spaces"], ["002", "Noah", "keep internal  spaces"]])
+
+    def test_collapse_only_keeps_the_outer_spaces(self):
+        rows = self.fixed(ignore=["whitespace"])
+        self.assertEqual(rows[1][2], " keep internal spaces ")
+        self.assertEqual(rows[0][0], " 001 ")
+
+    def test_formula_text_is_never_changed(self):
+        table = Table(["a"], [["=1+1"], ["@SUM(1,2)"], ["a"], ["b"], ["c"], ["d"]], ",")
+        self.assertEqual(fix_table(table).table.rows, table.rows)

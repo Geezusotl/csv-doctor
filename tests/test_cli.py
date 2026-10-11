@@ -196,3 +196,38 @@ class OtherCommandTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OnlyOptionTests(unittest.TestCase):
+    def fix(self, text, *args):
+        with tempfile.TemporaryDirectory() as tmp:
+            src, out = Path(tmp, "in.csv"), Path(tmp, "out.csv")
+            src.write_text(text, newline="")
+            code, stdout, stderr = run("fix", src, "-o", out, *args)
+            return code, (out.read_text() if out.exists() else None), stderr
+
+    TEXT = "id,note\n1, a  b \n2,N/A\n3,x\n4,y\n5,z\n6,w\n"
+
+    def test_only_one_rule_runs(self):
+        code, out, _ = self.fix(self.TEXT, "--only", "whitespace")
+        self.assertEqual((code, out), (0, "id,note\n1,a  b\n2,N/A\n3,x\n4,y\n5,z\n6,w\n"))
+
+    def test_only_can_be_repeated_and_combined_with_ignore(self):
+        _, out, _ = self.fix(self.TEXT, "--only", "whitespace", "--only", "repeated_spaces")
+        self.assertEqual(out, "id,note\n1,a b\n2,N/A\n3,x\n4,y\n5,z\n6,w\n")
+        _, out, _ = self.fix(self.TEXT, "--only", "whitespace", "--only", "repeated_spaces", "--ignore", "repeated_spaces")
+        self.assertEqual(out, "id,note\n1,a  b\n2,N/A\n3,x\n4,y\n5,z\n6,w\n")
+
+    def test_unknown_rule_name_is_an_error(self):
+        code, _, err = self.fix(self.TEXT, "--only", "nonsense")
+        self.assertEqual(code, 2)
+        self.assertIn("Unknown rule", err)
+
+    def test_check_accepts_only_too(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            src = Path(tmp, "in.csv")
+            src.write_text(self.TEXT)
+            code, out, _ = run("check", src, "--only", "missing_placeholder")
+        self.assertEqual(code, 1)
+        self.assertIn("missing_placeholder", out)
+        self.assertNotIn("whitespace (", out)

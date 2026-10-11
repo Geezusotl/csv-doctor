@@ -9,6 +9,9 @@ from .checks import DELETE_ROW, Finding, analyze
 from .core import CsvDoctorError, Table
 
 
+SPACING_RULES = ("whitespace", "repeated_spaces")
+
+
 @dataclass
 class FixResult:
     table: Table          # the cleaned data
@@ -39,8 +42,8 @@ def fix_table(table: Table, ignore=(), max_passes: int = 6) -> FixResult:
         index_of = {rid: k for k, rid in enumerate(ids)}
         deleted = {f.row for f in fixable if f.suggestion == DELETE_ROW}
         winners = {}
-        # Whitespace fixes go first so any more specific fix for the same cell wins.
-        for f in sorted(fixable, key=lambda f: f.rule != "whitespace"):
+        # Spacing fixes go first; a more specific fix for the same cell then overrides them.
+        for f in sorted(fixable, key=lambda f: (f.rule not in SPACING_RULES, f.rule != "whitespace")):
             if f.suggestion != DELETE_ROW and f.row not in deleted:
                 winners[(f.row, f.col)] = f
         for (row_number, col), f in winners.items():

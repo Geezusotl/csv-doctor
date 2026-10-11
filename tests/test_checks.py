@@ -12,9 +12,10 @@ DEPT = ["Engineering"] * 8 + ["Sales"] * 8 + ["Support"] * 8
 class WhitespaceTests(unittest.TestCase):
     def test_edges_and_repeated_spaces(self):
         table = column(["ok", " lead", "trail ", "in  ner", "fine", "fine2"])
-        found = only(analyze(table), "whitespace")
-        self.assertEqual([(f.row, f.suggestion) for f in found],
-                         [(3, "lead"), (4, "trail"), (5, "in ner")])
+        findings = analyze(table)
+        self.assertEqual([(f.row, f.suggestion) for f in only(findings, "whitespace")],
+                         [(3, "lead"), (4, "trail")])
+        self.assertEqual([(f.row, f.suggestion) for f in only(findings, "repeated_spaces")], [(5, "in ner")])
 
     def test_single_inner_tab_and_clean_cells_are_fine(self):
         self.assertEqual(only(analyze(column(["a\tb", "plain", "x y"])), "whitespace"), [])
@@ -235,3 +236,34 @@ class IgnoreTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FormulaTests(unittest.TestCase):
+    RISKY = ["=1+1", "=SUM(A1:A3)", "@SUM(1,2)", "+SUM(1,2)", "-cmd(x)", "+cmd|' /c calc'!A0", " =1+1",
+             "=HYPERLINK(\"http://example.invalid\",\"x\")"]
+    SAFE = ["-123", "+123", "+44 20 7946 0958", "+1 (555) 123-4567", "@handle", "-", "=", "a=b", "x+y",
+            "e-mail", "-5 items", "-1.5e3"]
+
+    def test_risky_text_is_flagged_without_a_fix(self):
+        for text in self.RISKY:
+            with self.subTest(text=text):
+                found = only(analyze(column(["ok"] * 6 + [text])), "spreadsheet_formula")
+                self.assertEqual(len(found), 1)
+                self.assertIsNone(found[0].suggestion)
+                self.assertIn("formula", found[0].why)
+
+    def test_ordinary_text_is_not_flagged(self):
+        for text in self.SAFE:
+            with self.subTest(text=text):
+                self.assertEqual(only(analyze(column(["ok"] * 6 + [text])), "spreadsheet_formula"), [])
+
+
+class RepeatedSpacesTests(unittest.TestCase):
+    def test_inner_runs_are_a_separate_rule_that_keeps_the_outer_spaces_for_the_other_rule(self):
+        findings = analyze(column(["a", "b", "c", "d", "e", " in  ner "]))
+        self.assertEqual([(f.rule, f.suggestion) for f in findings if f.rule in ("whitespace", "repeated_spaces")],
+                         [("repeated_spaces", " in ner "), ("whitespace", "in  ner")])
+
+    def test_a_blank_looking_cell_is_only_a_whitespace_finding(self):
+        findings = analyze(column(["a", "b", "c", "d", "e", "     "]))
+        self.assertEqual({f.rule for f in findings}, {"whitespace"})

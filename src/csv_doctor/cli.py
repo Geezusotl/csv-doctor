@@ -26,13 +26,22 @@ def _delimiter(value: Optional[str]) -> Optional[str]:
     return value
 
 
-def _ignored(values) -> list:
+def _known(values) -> list:
     unknown = [v for v in values if v not in RULES]
     if unknown:
         raise CsvDoctorError(
             f"Unknown rule {unknown[0]!r}. Run 'csv-doctor rules' to see the available rules."
         )
     return list(values)
+
+
+def _ignored(args) -> list:
+    """Rules to skip: everything named by --ignore, plus everything not named by --only."""
+    skip = set(_known(args.ignore))
+    only = _known(args.only)
+    if only:
+        skip |= set(RULES) - set(only)
+    return sorted(skip)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -48,6 +57,8 @@ def build_parser() -> argparse.ArgumentParser:
         p.add_argument("--delimiter", help="field delimiter (default: detected); use 'tab' for tabs")
         p.add_argument("--ignore", action="append", default=[], metavar="RULE",
                        help="skip a rule (repeatable); see 'csv-doctor rules'")
+        p.add_argument("--only", action="append", default=[], metavar="RULE",
+                       help="run only this rule (repeatable); for example --only whitespace for a trim-only clean")
         p.add_argument("--format", choices=("text", "json"), default="text",
                        help="output format (default: text)")
 
@@ -67,7 +78,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def _check(args) -> int:
     table = load_table(args.file, _delimiter(args.delimiter))
-    findings = analyze(table, _ignored(args.ignore))
+    findings = analyze(table, _ignored(args))
     if args.format == "json":
         print(check_json(findings, args.file, table))
     else:
@@ -78,7 +89,7 @@ def _check(args) -> int:
 def _fix(args) -> int:
     source = Path(args.file)
     table = load_table(source, _delimiter(args.delimiter))
-    result = fix_table(table, _ignored(args.ignore))
+    result = fix_table(table, _ignored(args))
     output = None
     if result.applied:
         output = Path(args.output) if args.output else default_output_path(source)

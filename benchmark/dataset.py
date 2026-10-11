@@ -31,8 +31,11 @@ NOT_A_DATE = ["2021-02-30", "2022-13-05", "2021-04-31", "2021-00-10", "next week
 COUNTS = {
     "whitespace": 12, "missing_placeholder": 12, "mixed_date_format": 12, "invalid_date": 4,
     "number_format": 6, "mixed_type": 6, "outlier": 5, "inconsistent_case": 6,
-    "category_typo": 8, "duplicate_row": 8, "ragged_row": 3,
+    "category_typo": 8, "duplicate_row": 8, "ragged_row": 3, "spreadsheet_formula": 3,
 }
+
+# Cells that a spreadsheet may execute. There is no automatic fix; the rule only warns.
+FORMULAS = ["=HYPERLINK(\"http://example.invalid\",\"click\")", "@SUM(1,2)", "+cmd|' /c calc'!A0"]
 
 
 @dataclass(frozen=True)
@@ -121,15 +124,15 @@ def build(seed: int = 7, n: int = 300) -> Dataset:
     dup_sources = take(COUNTS["duplicate_row"])
     ragged = take(COUNTS["ragged_row"])
 
-    for i in take(COUNTS["whitespace"]):
+    for k, i in enumerate(take(COUNTS["whitespace"])):
         column = rng.choice(["name", "email", "department", "country"])
         v = clean[i][COL[column]]
-        variant = rng.choice(["lead", "trail", "both", "inner"])
+        variant = ["lead", "trail", "both", "inner"][k % 4]
         if variant == "inner" and " " not in v:
             variant = "trail"
         dirty_value = {"lead": "  " + v, "trail": v + "  ", "both": " " + v + " ",
                        "inner": v.replace(" ", "   ", 1) if " " in v else v}[variant]
-        inject("whitespace", i, column, dirty_value, v)
+        inject("repeated_spaces" if variant == "inner" else "whitespace", i, column, dirty_value, v)
 
     for i in take(COUNTS["missing_placeholder"]):
         column = rng.choice(["name", "email", "age", "department", "signup_date", "salary", "country"])
@@ -170,6 +173,9 @@ def build(seed: int = 7, n: int = 300) -> Dataset:
             column = rng.choice(usable)
             inject("category_typo", i, column, _typo(rng, clean[i][COL[column]]), clean[i][COL[column]])
             typos += 1
+
+    for k, i in enumerate(take(COUNTS["spreadsheet_formula"])):
+        inject("spreadsheet_formula", i, "name", FORMULAS[k % len(FORMULAS)], None)
 
     for i in ragged:
         truth.append(Injected("ragged_row", i + 2, None, None, None, None))
