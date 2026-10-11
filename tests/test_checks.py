@@ -44,9 +44,19 @@ class RowTests(unittest.TestCase):
         self.assertEqual([(f.row, f.suggestion) for f in found], [(4, DELETE_ROW), (6, DELETE_ROW)])
         self.assertIn("row 2", found[0].why)
 
-    def test_spacing_is_ignored_but_case_is_not(self):
-        table = make(["a", "b"], [["x", "y"], ["x ", " y"], ["X", "y"]])
-        self.assertEqual([f.row for f in only(analyze(table), "duplicate_row")], [3])
+    def test_duplicates_are_exact_so_spacing_and_case_matter(self):
+        # "x " is not the same value as "x"; deleting that row would lose data.
+        table = make(["a", "b"], [["x", "y"], ["x ", " y"], ["X", "y"], ["x", "y"]])
+        self.assertEqual([f.row for f in only(analyze(table), "duplicate_row")], [5])
+
+    def test_blank_and_repeated_headers_are_flagged_without_a_fix(self):
+        table = make(["id", "name", "Name", ""], [["1", "a", "b", "c"]])
+        found = only(analyze(table), "duplicate_header")
+        self.assertEqual([(f.row, f.col) for f in found], [(1, 2), (1, 3)])
+        self.assertTrue(all(f.suggestion is None for f in found))
+
+    def test_unique_headers_are_not_flagged(self):
+        self.assertEqual(only(analyze(make(["a", "b"], [["1", "2"]])), "duplicate_header"), [])
 
     def test_empty_rows_are_not_duplicates(self):
         table = make(["a", "b"], [["", ""], ["", ""], ["1", "2"]])

@@ -32,6 +32,7 @@ RULES = {
     "whitespace": "Leading, trailing or repeated spaces in a cell.",
     "missing_placeholder": "Text such as N/A, null or '-' standing in for a blank.",
     "duplicate_row": "A row identical to an earlier row.",
+    "duplicate_header": "A blank or repeated column name.",
     "ragged_row": "A row with a different number of fields than the header.",
     "mixed_date_format": "A date written differently from the rest of its column.",
     "invalid_date": "A value in a date column that is not a real date.",
@@ -510,6 +511,23 @@ def check_categories(col: Column) -> Iterator[Finding]:
             )
 
 
+def check_header(table: Table) -> Iterator[Finding]:
+    seen = {}
+    for col, name in enumerate(table.header):
+        label = name.strip()
+        if not label:
+            yield Finding("duplicate_header", 1, col, name, name,
+                          f"Column {col + 1} has no name." + _no_fix("a name cannot be guessed"))
+        elif label.casefold() in seen:
+            first = seen[label.casefold()]
+            yield Finding("duplicate_header", 1, col, name, name,
+                          f"Column {col + 1} is called {name!r}, the same name as column {first + 1}, "
+                          "so tools that look columns up by name will mix them up."
+                          + _no_fix("the right new name is a human decision"))
+        else:
+            seen[label.casefold()] = col
+
+
 def check_rows(table: Table) -> Iterator[Finding]:
     width = len(table.header)
     seen = {}
@@ -524,9 +542,12 @@ def check_rows(table: Table) -> Iterator[Finding]:
             yield Finding("ragged_row", number, None, None, None,
                           f"Row {number} has {len(row)} field(s) but the header has {width}."
                           + _no_fix("it is unclear which values are missing or extra"))
-        key = tuple(normalize(x) for x in row)
-        if not any(key):
+        if not any(normalize(x) for x in row):
             continue
+        # Exact comparison: "Maya " and "Maya" are different values. Rows that only
+        # differ by whitespace become identical after the whitespace fix, and the
+        # next pass of `fix` then removes them.
+        key = tuple(row)
         if key in seen:
             yield Finding("duplicate_row", number, None, None, None,
                           f"Row {number} has exactly the same values as row {seen[key]}, "
@@ -537,7 +558,7 @@ def check_rows(table: Table) -> Iterator[Finding]:
 
 def analyze(table: Table, ignore=()) -> list:
     """Run every check and return findings ordered by row, then column."""
-    findings = list(check_rows(table))
+    findings = list(check_header(table)) + list(check_rows(table))
     for col in build_columns(table):
         findings.extend(check_cells(col))
         if col.kind == "numeric":

@@ -47,7 +47,25 @@ class Table:
 
 
 def decode(raw: bytes) -> str:
-    """Decode file bytes: UTF-8 (BOM allowed), then Windows-1252, then Latin-1."""
+    """Decode file bytes: UTF-16 (BOM or obvious NUL pattern), UTF-8 (BOM allowed),
+    then Windows-1252, then Latin-1."""
+    if raw.startswith((b"\xff\xfe", b"\xfe\xff")):
+        try:
+            return raw.decode("utf-16")  # the BOM picks the byte order and is dropped
+        except UnicodeDecodeError:
+            raise CsvDoctorError("The file starts like UTF-16 text but is damaged, so it cannot be read safely.") from None
+    if b"\x00" in raw:
+        sample = raw[:4096]
+        even, odd = sample[0::2].count(0), sample[1::2].count(0)
+        half = max(1, len(sample) // 2)
+        for nul_share, name in ((even / half, "utf-16-be"), (odd / half, "utf-16-le")):
+            if nul_share > 0.3:  # text that is mostly ASCII has a NUL in every other byte
+                try:
+                    return raw.decode(name)
+                except UnicodeDecodeError:
+                    break
+        raise CsvDoctorError("The file contains NUL bytes and is not recognisable UTF-16 text, "
+                             "so it is probably not a CSV file.")
     for encoding in ("utf-8-sig", "cp1252"):
         try:
             return raw.decode(encoding)
@@ -64,12 +82,38 @@ def sniff_delimiter(text: str) -> str:
         return ","
 
 
+def _read_records(text: str, delimiter: str) -> list:
+    """Parse records, refusing to guess when a quoted field is never closed.
+
+    Python's reader quietly folds the rest of the file into one cell in that
+    case, which would hide every later row. Other quoting oddities (a stray
+    quote inside a value, say) keep the reader's lenient behaviour.
+    """
+    strict = csv.reader(io.StringIO(text, newline=""), delimiter=delimiter, strict=True)
+    records, start_line = [], 1
+    try:
+        while True:
+            start_line = strict.line_num + 1
+            try:
+                records.append(next(strict))
+            except StopIteration:
+                return records
+    except csv.Error as exc:
+        if "unexpected end of data" in str(exc):
+            raise CsvDoctorError(
+                f"A quoted field that starts on line {start_line} is never closed, so everything "
+                "after it would be read as one cell. Add the missing closing quote and try again."
+            ) from None
+    return list(csv.reader(io.StringIO(text, newline=""), delimiter=delimiter))
+
+
 def parse_text(text: str, delimiter: Optional[str] = None) -> Table:
     """Parse CSV text. The first record is the header."""
     if delimiter is None:
         delimiter = sniff_delimiter(text)
-    reader = csv.reader(io.StringIO(text, newline=""), delimiter=delimiter)
-    records = list(reader)
+    if not text.strip():
+        raise CsvDoctorError("The file is empty (no header and no data), so there is nothing to check.")
+    records = _read_records(text, delimiter)
     if not records:
         return Table([], [], delimiter)
     header, rows = records[0], records[1:]

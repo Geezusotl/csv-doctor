@@ -83,7 +83,8 @@ Rows are numbered like a spreadsheet: the header is row 1, the first data row is
 |---|---|---|
 | `whitespace` | Leading, trailing or repeated spaces | Yes, trims them |
 | `missing_placeholder` | `N/A`, `null`, `none`, `-`, `?`, ... standing in for a blank | Yes, blanks the cell |
-| `duplicate_row` | A row identical to an earlier one | Yes, deletes the later copy |
+| `duplicate_row` | A row exactly identical to an earlier one (spacing and capitalisation count; rows that differ only by spaces become duplicates after `fix` trims them) | Yes, deletes the later copy |
+| `duplicate_header` | A blank or repeated column name | No |
 | `ragged_row` | A row with more or fewer fields than the header, or a blank row | No |
 | `mixed_date_format` | A date written differently from the rest of its column | Yes, rewrites it in the column's main format, unless day/month is ambiguous |
 | `invalid_date` | `2021-02-30`, or text in a date column | No |
@@ -112,7 +113,7 @@ These are enforced by tests, not just documented:
 - Running `fix` on its own output changes nothing more.
 - If nothing can be fixed automatically, no output file is created.
 
-Fixed files are written as UTF-8 with `\n` line endings. Input encodings tried: UTF-8 (with or without BOM), Windows-1252, then Latin-1.
+Fixed files are written as UTF-8 with `\n` line endings. Input encodings tried: UTF-16 (BOM, or NUL-byte pattern), UTF-8 (with or without BOM), Windows-1252, then Latin-1. An empty file, a file with an unclosed quote, and binary data are refused with a message (exit code `2`) instead of being reported as clean.
 
 ## Benchmark
 

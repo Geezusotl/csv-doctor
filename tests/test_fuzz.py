@@ -54,7 +54,7 @@ class FuzzTests(unittest.TestCase):
 
                 findings = analyze(table)
                 for f in findings:
-                    self.assertTrue(2 <= f.row <= n_rows + 1, f)
+                    self.assertTrue((1 if f.rule == "duplicate_header" else 2) <= f.row <= n_rows + 1, f)
                     self.assertTrue(f.col is None or 0 <= f.col < table.n_cols, f)
                     self.assertTrue(f.why, f)
 

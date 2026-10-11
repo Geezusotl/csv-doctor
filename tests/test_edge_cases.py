@@ -5,16 +5,16 @@ from pathlib import Path
 
 from csv_doctor import Table, analyze, fix_table, load_table, parse_text
 from csv_doctor.checks import build_columns
-from csv_doctor.core import dumps, write_table
+from csv_doctor.core import CsvDoctorError, decode, dumps, write_table
 from tests.helpers import column, make, only
 
 
 class ParsingTests(unittest.TestCase):
     def test_empty_file(self):
-        table = parse_text("")
-        self.assertEqual((table.header, table.rows), ([], []))
-        self.assertEqual(analyze(table), [])
-        self.assertEqual(fix_table(table).applied, [])
+        # An empty file must be reported, never passed off as a clean one.
+        for text in ("", "   \n\r\n  "):
+            with self.assertRaises(CsvDoctorError):
+                parse_text(text)
 
     def test_header_only(self):
         table = parse_text("a,b,c\n")
@@ -116,3 +116,45 @@ class PerformanceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FileFormatTests(unittest.TestCase):
+    """Regressions found by the external CSV Doctor test pack."""
+
+    def test_unclosed_quote_is_reported_with_its_line(self):
+        with self.assertRaises(CsvDoctorError) as ctx:
+            parse_text('id,note\r\n1,"unfinished\r\n2,next\r\n')
+        self.assertIn("line 2", str(ctx.exception))
+
+    def test_unclosed_quote_on_a_later_line(self):
+        with self.assertRaises(CsvDoctorError) as ctx:
+            parse_text('a,b\n1,2\n3,"x\n4,5\n')
+        self.assertIn("line 3", str(ctx.exception))
+
+    def test_stray_quote_inside_a_value_is_still_read_leniently(self):
+        table = parse_text('a,b\n5" pipe,2\nok,3\n')
+        self.assertEqual(table.rows[1], ["ok", "3"])
+
+    def test_multiline_quoted_field_is_not_mistaken_for_unclosed(self):
+        table = parse_text('id,note\n1,"line one\nline two"\n2,x\n')
+        self.assertEqual(table.rows, [["1", "line one\nline two"], ["2", "x"]])
+
+    def test_utf16_with_bom_both_byte_orders(self):
+        for enc in ("utf-16-le", "utf-16-be"):
+            raw = b"\xff\xfe" if enc.endswith("le") else b"\xfe\xff"
+            raw += "id,name\r\n001,Jos\u00e9\r\n002,\u6771\u4eac\r\n".encode(enc)
+            table = parse_text(decode(raw))
+            self.assertEqual(table.rows, [["001", "Jos\u00e9"], ["002", "\u6771\u4eac"]], enc)
+
+    def test_utf16_without_bom(self):
+        raw = "id,name\n1,abc\n2,def\n".encode("utf-16-le")
+        self.assertEqual(parse_text(decode(raw)).rows, [["1", "abc"], ["2", "def"]])
+
+    def test_binary_with_nul_bytes_is_refused_not_garbled(self):
+        with self.assertRaises(CsvDoctorError):
+            decode(bytes(range(256)) * 8)  # arbitrary binary, not UTF-16
+
+    def test_header_only_file_is_fine(self):
+        table = parse_text("id,name,amount\r\n")
+        self.assertEqual((table.n_rows, table.n_cols), (0, 3))
+        self.assertEqual(analyze(table), [])

@@ -12,6 +12,22 @@ from tests.helpers import column, make
 EXAMPLE = Path(__file__).resolve().parent.parent / "examples" / "employees_messy.csv"
 
 
+class PackRegressionTests(unittest.TestCase):
+    ROWS = [["1", "Maya", "10"], ["1", "Maya", "10"], ["1", "maya", "10"], ["1", "Maya ", "10"],
+            ["2", "Noah", "0"], ["2", "Noah", "0"]]
+
+    def test_only_exact_duplicates_are_removed_when_whitespace_is_not_cleaned(self):
+        table = Table(["id", "name", "amount"], [list(r) for r in self.ROWS], ",")
+        result = fix_table(table, ignore=["whitespace", "inconsistent_case"])
+        self.assertEqual(result.table.rows, [["1", "Maya", "10"], ["1", "maya", "10"],
+                                              ["1", "Maya ", "10"], ["2", "Noah", "0"]])
+
+    def test_trim_then_dedupe_in_one_run(self):
+        rows = [[" 001 ", " Maya "], ["001", "Maya"], ["002", "Noah"], [" 002", "Noah "], ["002", "noah"]]
+        result = fix_table(Table(["id", "name"], rows, ","), ignore=["inconsistent_case"])
+        self.assertEqual(result.table.rows, [["001", "Maya"], ["002", "Noah"], ["002", "noah"]])
+
+
 class ExampleFileTests(unittest.TestCase):
     def setUp(self):
         self.table = load_table(EXAMPLE)
